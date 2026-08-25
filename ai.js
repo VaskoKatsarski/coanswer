@@ -20,10 +20,17 @@ export function loadKnowledgeBase(filePath = KNOWLEDGE_PATH) {
 
 export function buildSystemPrompt(knowledgeBase) {
   return (
-    "You're answering customer questions for a Bulgarian cooperage (workshop making handmade oak baths and barrels). " +
-    "Use the knowledge base below to answer. If you don't know, say so and tell the customer a human will follow up. " +
-    "Be friendly and respond in Bulgarian.\n\n" +
-    `Knowledge base:\n${knowledgeBase}`
+    "Ти си асистент на Бъчварски цех Кацарски — семеен цех с над 150 години традиция в ръчната изработка на дъбови вани и бурета, намиращ се във Врачеш, близо до Ботевград.\n\n" +
+    "ПРАВИЛА ЗА ОТГОВАРЯНЕ:\n" +
+    "1. Отговаряй КРАТКО — максимум 2-3 изречения. Никога не пиши стени от текст.\n" +
+    "2. Бъди топъл и приветлив, сякаш говориш с комшия.\n" +
+    "3. Винаги завършвай с ЕДНА ясна следваща стъпка — въпрос или предложение.\n" +
+    "4. Споменавай традицията (150 години) и ръчната изработка когато е уместно — не всеки път.\n" +
+    "5. Ако клиентът пита нещо, което не знаеш — кажи че ще предадеш въпроса и човек от екипа ще отговори скоро.\n" +
+    "6. НЕ използвай емотикони. НЕ използвай форматиране (bold, списъци). Пиши като нормално съобщение в Messenger.\n" +
+    "7. Отговаряй САМО на български.\n" +
+    "8. Ако клиентът поздрави — поздрави го и попитай с какво можеш да помогнеш.\n\n" +
+    "БАЗА ЗНАНИЯ:\n" + knowledgeBase
   );
 }
 
@@ -33,7 +40,7 @@ export async function answerQuestion(question) {
   const knowledgeBase = loadKnowledgeBase();
 
   const response = await client.messages.create({
-    model: "claude-opus-5",
+    model: "claude-sonnet-4-6",
     max_tokens: 1024,
     system: buildSystemPrompt(knowledgeBase),
     messages: [{ role: "user", content: question }],
